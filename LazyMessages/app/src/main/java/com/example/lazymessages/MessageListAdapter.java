@@ -49,11 +49,19 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             this.binding = binding;
         }
         public void bindTo(Messages messages){
-            binding.tvItemMessageList.setText(messages.titre);
-            binding.tvItemMessageList.setOnClickListener(new View.OnClickListener() {
+            binding.tvItemMessageList.setText(messages.titre.toString());
+            binding.destinataire.setText(messages.destinataire.toString());
+            binding.detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mCallBack.onSmsClick(messages);
+                }
+            });
+            binding.suppr.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallBack.deleteSmsClicked(messages);
+
                 }
             });
         }

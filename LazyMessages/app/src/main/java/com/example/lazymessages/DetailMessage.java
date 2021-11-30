@@ -28,7 +28,11 @@ public class DetailMessage extends AppCompatActivity {
         actionBar.setTitle("Détail du message :");
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        nBinding.textView2.setText(messages.contenu);
+        nBinding.textView2.setText(messages.titre);
+        nBinding.destinataire.setText(messages.destinataire);
+        nBinding.message.setText(messages.contenu);
+        nBinding.date.setText(messages.date);
+        //nBinding.recuerence.setText(messages.titre);
 
         setContentView(v);
     }

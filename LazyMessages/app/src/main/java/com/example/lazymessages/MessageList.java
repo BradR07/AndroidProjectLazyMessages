@@ -47,9 +47,12 @@ public class MessageList extends AppCompatActivity implements OnSmsClickLstener 
         Messages A = new Messages("Bon aniv!", "+33620254149", "Je te souhaites un joyeux anniversaire !", "01/12/2021");
         Messages B = new Messages("Bon Noel!", "+33620254150", "Je te souhaites un joyeux Noel !", "01/12/2021");
         Messages C = new Messages("Bon enterrement!", "+33620254151", "Je te souhaites un joyeux enterrement !", "01/12/2021");
+        Messages D = new Messages("Text Generer", "+33620254151", "Nihil morati post haec militares avidi saepe turbarum adorti sunt Montium primum, qui divertebat in proximo, levi corpore senem atque morbosum, et hirsutis resticulis cruribus eius innexis divaricaturn sine spiramento ullo ad usque praetorium traxere praefecti.", "01/12/2021");
         messagelist.add(A);
         messagelist.add(B);
         messagelist.add(C);
+        messagelist.add(D);
+
         messagelist.addAll(DataStore.getInstance().getMessagesList());
 
         nBinding.rvSms.setLayoutManager(new LinearLayoutManager(this , RecyclerView.VERTICAL,false));
@@ -80,4 +83,14 @@ public class MessageList extends AppCompatActivity implements OnSmsClickLstener 
         startActivity(intent);
         //Toast.makeText(this, "my message : " + m , Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void deleteSmsClicked(Messages m) {
+
+
+
+        Toast.makeText(this, "Message supprimé : " + m.titre , Toast.LENGTH_LONG).show();
+    }
+
+
 }
