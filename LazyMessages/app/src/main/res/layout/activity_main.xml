@@ -35,7 +35,8 @@
         android:layout_width="288dp"
         android:layout_height="69dp"
         android:fontFamily="@font/main_font"
-        android:text="LazyMessages"
+        android:text="LazyMails"
+        android:gravity="center"
         android:textColor="@color/black"
         android:textSize="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -57,11 +58,11 @@
         app:srcCompat="@drawable/logo" />
 
     <Button
-        android:id="@+id/createmessage"
+        android:id="@+id/createmail"
         android:layout_width="300dp"
         android:layout_height="55dp"
         android:layout_marginBottom="128dp"
-        android:text="Créer un nouveau message"
+        android:text="Créer un nouveau mail"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,15 +70,15 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/messagelist"
+        android:id="@+id/maillist"
         android:layout_width="300dp"
         android:layout_height="55dp"
         android:layout_marginTop="12dp"
-        android:text="Mes messages programmés"
+        android:text="Mes mails programmés"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createmessage" />
+        app:layout_constraintTop_toBottomOf="@+id/createmail" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

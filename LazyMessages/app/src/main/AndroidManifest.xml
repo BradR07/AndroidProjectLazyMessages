@@ -2,13 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lazymessages">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
 
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LazyMessages">
+        android:theme="@style/Theme.LazyMessages"
+        android:icon="@mipmap/logo_foreground">
         <activity
             android:name=".SplashScreen"
             android:exported="true">
@@ -21,14 +26,14 @@
             android:name=".MainActivity"
             android:exported="true"></activity>
         <activity
-            android:name=".CreateMessage"
+            android:name=".CreateMail"
             android:parentActivityName=".MainActivity"></activity>
         <activity
-            android:name=".MessageList"
+            android:name=".MailList"
             android:parentActivityName=".MainActivity"></activity>
         <activity
-            android:name=".DetailMessage"
-            android:parentActivityName=".MessageList"
+            android:name=".DetailMail"
+            android:parentActivityName=".MailList"
             ></activity>
     </application>
 

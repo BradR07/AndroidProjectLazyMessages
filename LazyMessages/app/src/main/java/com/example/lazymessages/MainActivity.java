@@ -1,6 +1,5 @@
 package com.example.lazymessages;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,6 +8,9 @@ import android.view.View;
 
 import com.example.lazymessages.databinding.ActivityMainBinding;
 
+/**
+ * Activité principale acceuil
+ */
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding nBinding;
@@ -20,27 +22,33 @@ public class MainActivity extends AppCompatActivity {
         nBinding = ActivityMainBinding.inflate(getLayoutInflater());
         View v = nBinding.getRoot();
 
-
-        nBinding.createmessage.setOnClickListener(new View.OnClickListener() {
+        nBinding.createmail.setOnClickListener(new View.OnClickListener() {
+            /**
+             * onClick sur le bouton 'créer un nouveau message", renvoi vers la vue CreateMessages
+             * @param v une vue
+             */
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CreateMessage.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                Intent CreateMailIntent = new Intent(MainActivity.this, CreateMail.class);
+                CreateMailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(CreateMailIntent);
             }
         });
 
-        nBinding.messagelist.setOnClickListener(new View.OnClickListener() {
+        nBinding.maillist.setOnClickListener(new View.OnClickListener() {
+            /**
+             * onClick sur le bouton 'mes mails programmés", renvoi vers la vue MailList
+             * @param v une vue
+             */
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(MainActivity.this, MessageList.class);
-                intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent2);
+                Intent MailListIntent = new Intent(MainActivity.this, MailList.class);
+                MailListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(MailListIntent);
             }
         });
 
         setContentView(v);
         getSupportActionBar().hide();
-
     }
 }

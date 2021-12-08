@@ -3,10 +3,13 @@ package com.example.lazymessages;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Singleton base de données des mails enregistrés
+ */
 public class DataStore {
 
     private static  DataStore instance;
-    private List<Messages> messagesList = new ArrayList<>();
+    private List<Mails> mailsList = new ArrayList<>();
 
     public static DataStore getInstance() {
         if (instance == null){
@@ -15,11 +18,14 @@ public class DataStore {
         return instance;
     }
 
-    public List<Messages> getMessagesList() {
-        return messagesList;
+    /**
+     * @return liste de mail
+     */
+    public List<Mails> getMailsList() {
+        return mailsList;
     }
 
-    public void setMessagesList(List<Messages> messagesList) {
-        this.messagesList = messagesList;
+    public void setMailList(List<Mails> mailsList) {
+        this.mailsList = mailsList;
     }
 }

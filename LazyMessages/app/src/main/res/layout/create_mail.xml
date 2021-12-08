@@ -5,58 +5,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateMessage">
+    tools:context=".CreateMail">
 
 
-<!--  <androidx.appcompat.widget.Toolbar-->
-<!--      android:id="@+id/toolbar"-->
-<!--      android:layout_width="match_parent"-->
-<!--      android:layout_height="wrap_content"-->
-<!--      android:background="?attr/colorPrimary"-->
-<!--      android:minHeight="?attr/actionBarSize"-->
-<!--      android:theme="?attr/actionBarTheme"-->
-<!--      app:layout_constraintEnd_toEndOf="parent"-->
-<!--      app:layout_constraintStart_toStartOf="parent"-->
-<!--      app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--  <TextView-->
-<!--      android:id="@+id/textView4"-->
-<!--      android:layout_width="wrap_content"-->
-<!--      android:layout_height="32dp"-->
-<!--      android:fontFamily="@font/main_font"-->
-<!--      android:gravity="center"-->
-<!--      android:text="Créer un nouveau message"-->
-<!--      android:textColor="@color/white"-->
-<!--      android:textSize="20dp"-->
-<!--      app:layout_constraintBottom_toBottomOf="@+id/toolbar"-->
-<!--      app:layout_constraintEnd_toEndOf="@+id/toolbar"-->
-<!--      app:layout_constraintStart_toStartOf="@+id/toolbar"-->
-<!--      app:layout_constraintTop_toTopOf="@+id/toolbar" />-->
 
 
     <EditText
-        android:id="@+id/editTextTextTitle"
+        android:id="@+id/editTextTextObject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="ex: Bon anniv"
-
-        android:inputType="textPersonName"
+        android:hint="..."
+        android:gravity="center"
+        android:inputType="textEmailSubject"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <EditText
-        android:id="@+id/editTextPhone"
+        android:id="@+id/editTextMail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:autofillHints="phone num"
         android:ems="10"
-        android:hint="+33"
-        android:inputType="phone"
+        android:hint="ex: abcdef@gmail.com"
+        android:gravity="center"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,9 +45,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="Contenu..."
-
-        android:inputType="textPersonName"
+        android:hint="..."
+        android:gravity="center"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +59,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="ex: 28/11/2021"
+        android:hint="ex: 01/01/2022 08:25"
+        android:gravity="center"
         android:inputType="datetime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -95,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         android:gravity="center"
-        android:text="Titre :"
+        android:text="Objet :"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -113,7 +91,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextObject" />
 
     <TextView
         android:id="@+id/textView8"
@@ -126,7 +104,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextMail" />
 
     <TextView
         android:id="@+id/textView9"
@@ -153,5 +131,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextDate"
         app:layout_constraintVertical_bias="0.346" />
+
+    <Button
+        android:id="@+id/buttonDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate"
+        app:layout_constraintVertical_bias="0.04" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
