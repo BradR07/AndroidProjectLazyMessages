@@ -102,7 +102,6 @@ public class CreateMail extends AppCompatActivity {
 
 
 
-
                     //Parse date
                     Context context = getApplicationContext();
                     createNotification(nBinding.editTextTextObject.getText().toString(), context);
