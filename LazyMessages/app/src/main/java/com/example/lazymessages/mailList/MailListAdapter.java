@@ -1,9 +1,12 @@
-package com.example.lazymessages;
+package com.example.lazymessages.mailList;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.lazymessages.createMail.Mails;
 import com.example.lazymessages.databinding.ItemMailListBinding;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +15,8 @@ import java.util.List;
  * RecyclerView de la liste de message
  */
 public class MailListAdapter extends RecyclerView.Adapter {
-
     List<Mails> mailList = new ArrayList<>() ;
-    private OnMailClickListener mCallBack ;
+    private final OnMailClickListener mCallBack ;
 
     /**
      * @param mailList liste de message
@@ -25,10 +27,12 @@ public class MailListAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public MailListAdapter(OnMailClickListener mCallBack) {
+    public MailListAdapter(OnMailClickListener mCallBack)
+    {
         this.mCallBack = mCallBack;
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         ItemMailListBinding binding = ItemMailListBinding.inflate(LayoutInflater.from(parent.getContext()), parent,false);
@@ -45,8 +49,7 @@ public class MailListAdapter extends RecyclerView.Adapter {
         return mailList.size();
     }
     public class MessageListViewHolder extends RecyclerView.ViewHolder {
-
-        private ItemMailListBinding binding ;
+        private final ItemMailListBinding binding ;
 
         public MessageListViewHolder(ItemMailListBinding binding) {
             super(binding.getRoot());

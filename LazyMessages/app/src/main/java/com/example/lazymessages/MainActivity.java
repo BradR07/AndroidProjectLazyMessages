@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.lazymessages.createMail.CreateMailActivity;
 import com.example.lazymessages.databinding.ActivityMainBinding;
+import com.example.lazymessages.mailList.MailListActivity;
 
 /**
  * Activité principale acceuil
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View v) {
-                Intent CreateMailIntent = new Intent(MainActivity.this, CreateMail.class);
+                Intent CreateMailIntent = new Intent(MainActivity.this, CreateMailActivity.class);
                 CreateMailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(CreateMailIntent);
             }
@@ -37,12 +39,12 @@ public class MainActivity extends AppCompatActivity {
 
         nBinding.maillist.setOnClickListener(new View.OnClickListener() {
             /**
-             * onClick sur le bouton 'mes mails programmés", renvoi vers la vue MailList
+             * onClick sur le bouton 'mes mails programmés", renvoi vers la vue MailListActivity
              * @param v une vue
              */
             @Override
             public void onClick(View v) {
-                Intent MailListIntent = new Intent(MainActivity.this, MailList.class);
+                Intent MailListIntent = new Intent(MainActivity.this, MailListActivity.class);
                 MailListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(MailListIntent);
             }

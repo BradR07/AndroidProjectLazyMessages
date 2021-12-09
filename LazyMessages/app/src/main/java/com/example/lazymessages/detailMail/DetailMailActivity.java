@@ -1,4 +1,4 @@
-package com.example.lazymessages;
+package com.example.lazymessages.detailMail;
 
 import android.os.Bundle;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.lazymessages.createMail.Mails;
 import com.example.lazymessages.databinding.DetailMailBinding;
 import com.google.gson.Gson;
 
@@ -13,7 +14,7 @@ import com.google.gson.Gson;
 /**
  * Activité detail d'un message
  */
-public class DetailMail extends AppCompatActivity {
+public class DetailMailActivity extends AppCompatActivity {
 
     private DetailMailBinding nBinding;
     private Mails mails;
@@ -36,7 +37,6 @@ public class DetailMail extends AppCompatActivity {
         nBinding.destinataire.setText(mails.destinataire);
         nBinding.message.setText(mails.contenu);
         nBinding.date.setText(mails.date);
-        //nBinding.recurrence.setText(messages.titre);
 
         setContentView(v);
     }

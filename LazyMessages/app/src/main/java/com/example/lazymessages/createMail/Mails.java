@@ -1,10 +1,9 @@
-package com.example.lazymessages;
+package com.example.lazymessages.createMail;
 
 /**
- * Classe de l'objet Messages
+ * Classe de l'objet Mails
  */
 public class Mails {
-
     public String objet;
     public String destinataire;
     public String contenu;
@@ -14,7 +13,7 @@ public class Mails {
      * @param objet titre du message
      * @param destinataire numéro de téléphone du destinatiare
      * @param contenu contenu du message
-     * @param date date a laquelle envoyer le message
+     * @param date date à laquelle envoyer le message
      */
     public Mails(String objet, String destinataire, String contenu, String date){
         this.objet = objet;
@@ -61,5 +60,4 @@ public class Mails {
 //        this.contenu = null;
 //        this.date = null;
 //    }
-
 }

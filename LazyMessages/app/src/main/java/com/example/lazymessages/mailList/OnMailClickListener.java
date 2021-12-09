@@ -1,4 +1,6 @@
-package com.example.lazymessages;
+package com.example.lazymessages.mailList;
+
+import com.example.lazymessages.createMail.Mails;
 
 /**
  * Interface ayant des fonctions listener sur chaque mail
