@@ -32,7 +32,7 @@ public class DetailMailActivity extends AppCompatActivity {
 
         nBinding = DetailMailBinding.inflate(getLayoutInflater());
         View v = nBinding.getRoot();
-        mails = new Gson().fromJson(getIntent().getStringExtra("mail_clicked"), Mails.class);
+        mailEntity = new Gson().fromJson(getIntent().getStringExtra("mail_clicked"), MailEntity.class);
 
         // Configuration de la ToolBar
         ActionBar actionBar = getSupportActionBar();
@@ -52,26 +52,25 @@ public class DetailMailActivity extends AppCompatActivity {
                 MailDao mailDao = db.mailDao();
                 //Get le mail selectionné
 
-                Singleton monSingeton = Singleton.getInstanceSingleton();
+                //Singleton monSingeton = Singleton.getInstanceSingleton();
 
 
 
                 //mailEntity=Singleton.getInstanceSingleton();
 
 
-               mailEntity = mailDao.getOneById(monSingeton.getMonMail().id);
+               //mailEntity = mailDao.getOneById(monSingeton.getMonMail().id);
 
-                System.out.println(mailEntity.contenu);
+                //System.out.println(mailEntity.contenu);
 
                 //System.out.println(mailEntity);
             }
         });
 
         nBinding.textView2.setText(mailEntity.objet);
-        nBinding.destinataire.setText("test");
-        nBinding.message.setText("test");
-        nBinding.date.setText("test");
-        Log.wtf("wtf", String.valueOf(mails));
+        nBinding.destinataire.setText(mailEntity.destinataire);
+        nBinding.message.setText(mailEntity.contenu);
+        nBinding.date.setText(mailEntity.date);
 
         setContentView(v);
     }

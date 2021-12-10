@@ -59,8 +59,8 @@ public class MailListAdapter extends RecyclerView.Adapter {
         }
 
         public void bindTo(MailEntity mails){
-            binding.tvItemMessageList.setText(mails.objet.toString());
-            binding.destinataire.setText(mails.destinataire.toString());
+            binding.tvItemMessageList.setText(mails.objet);
+            binding.destinataire.setText(mails.destinataire);
             binding.detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

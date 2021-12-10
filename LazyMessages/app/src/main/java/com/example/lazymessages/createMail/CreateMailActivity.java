@@ -114,7 +114,7 @@ public class CreateMailActivity extends AppCompatActivity implements OnReturnDat
     public void onMailInserted() {
 
         //Donner le DateTime a la notif
-        createMailPresenter.setRecurringAlarm2(this, createMailPresenter.getDay(), createMailPresenter.getMonth(), createMailPresenter.getYear(), createMailPresenter.getHour(), createMailPresenter.getMinute());
+        createMailPresenter.setRecurringAlarm2(this, createMailPresenter.getDay(), createMailPresenter.getMonth(), createMailPresenter.getYear(), createMailPresenter.getHour(), createMailPresenter.getMinute(), mail);
 
         //Message de confirmation programmation du mail
         CharSequence text = "Nouveau mail programmé !";

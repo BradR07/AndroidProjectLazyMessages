@@ -75,6 +75,10 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
     protected void onResume() {
         super.onResume();
         //messagelist.clear();
+        DataStore db = DataStore.getDatabase(getApplicationContext());
+        //RECUP TOUTE LA LISTE MAIL
+        MailDao mailDao = db.mailDao();
+        mailEntityList = mailDao.getAll();
         this.mailListAdapter.FillArray(mailEntityList);
     }
 
@@ -90,9 +94,9 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
         DetailMailIntent.putExtra("mail_clicked", mailStringified);
         startActivity(DetailMailIntent);
         //Toast.makeText(this, "my message : " + m , Toast.LENGTH_LONG).show();
-        int monId= m.id;
 
-        Singleton.getInstanceSingleton(m);
+
+        //Singleton.getInstanceSingleton(m);
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -104,7 +108,7 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
                 //RECUP TOUTE LA LISTE MAIL
                 MailDao mailDao = db.mailDao();
                 //Delete le mail selectionné
-                Singleton.getInstanceSingleton(mailDao.getOneById(m.id));
+                //Singleton.getInstanceSingleton(mailDao.getOneById(m.id));
             }
         });
 
@@ -117,8 +121,22 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
     @Override
     public void deleteMailClicked(MailEntity m) {
         Toast.makeText(this, "Mail supprimé : " + m.objet, Toast.LENGTH_LONG).show();
-        mailEntityList.remove(m);
-        mailListAdapter.FillArray(mailEntityList);
+        //Creer nouvelle liste
+
+        //mettre liste courrante dans la nouvelle
+        DataStore db = DataStore.getDatabase(getApplicationContext());
+        //RECUP TOUTE LA LISTE MAIL
+        MailDao mailDao = db.mailDao();
+        List<MailEntity> mailEntityList = mailDao.getAll();
+
+        List<MailEntity> newMailEntityList = mailEntityList;
+
+        //Remove de la nouvelle liste
+        //ajouter la nouvelle liste
+        newMailEntityList.remove(m);
+        mailListAdapter.FillArray(newMailEntityList);
+
+        //CA RAFRAICHIS PAS -> ESSAYER DE RAFRAICHIR APRES LA SUPPR
 
         //Suppr de la BDD
 

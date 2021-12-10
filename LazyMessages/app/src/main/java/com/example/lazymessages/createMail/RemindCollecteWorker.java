@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -22,7 +23,9 @@ import androidx.work.WorkerParameters;
 import com.example.lazymessages.DataStore;
 import com.example.lazymessages.MailDao;
 import com.example.lazymessages.R;
+import com.google.gson.Gson;
 
+import java.util.Calendar;
 import java.util.List;
 //import java.util.Calendar;
 //import java.util.concurrent.TimeUnit;
@@ -31,20 +34,44 @@ public class RemindCollecteWorker extends Worker {
     private final Context context;
     private static final int CHANNEL_ID = 1023;
     private List<MailEntity> mailEntityList ;
+    private MailEntity mailEntity;
 
     public RemindCollecteWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        //mailEntity = new Gson().fromJson(getIntent().getStringExtra("mail_clicked"), MailEntity.class);
         this.context = context;
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        createNotification();
+
+        getMailList();
         return Result.success();
     }
 
-   private void createNotification(){
+    private void getMailList(){
+        DataStore db = DataStore.getDatabase(context);
+        //RECUP TOUTE LA LISTE MAIL
+        MailDao mailDao = db.mailDao();
+        List<MailEntity> mailEntityList = mailDao.getAll();
+        String currentDate = Calendar.getInstance().toString();
+
+
+
+        for (MailEntity i: mailEntityList) {
+            if (currentDate.equals(i.date)) {
+                System.out.println("Match Found " + i);
+                break;
+            }
+            createNotification(i);
+        }
+
+    }
+
+
+   private void createNotification(MailEntity m){
+
        CharSequence name = "Un nouveau mail en attente";
        String description = "Cliquez pour envoyer votre mail";
        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -56,12 +83,15 @@ public class RemindCollecteWorker extends Worker {
            notificationManager.createNotificationChannel(channel);
        }
 
+       //CA MARCHE PAS : ça affiche pas le destinataire
+       Log.wtf("wtf",m.destinataire);
+
        //Renvoi vers l'application Gmail
        Intent i = new Intent(Intent.ACTION_SEND);
        i.setType("message/rfc822");
-       i.putExtra(Intent.EXTRA_EMAIL, "destinataire@gmail.com");
-       i.putExtra(Intent.EXTRA_SUBJECT, "subject");
-       i.putExtra(Intent.EXTRA_TEXT, "nBinding.editTextTextContent.getText().toString()");
+       i.putExtra(Intent.EXTRA_EMAIL, m.destinataire);
+       i.putExtra(Intent.EXTRA_SUBJECT, m.objet);
+       i.putExtra(Intent.EXTRA_TEXT, m.contenu);
 
        try {
 //           //INIT DATASTORE
@@ -96,6 +126,7 @@ public class RemindCollecteWorker extends Worker {
 
        //}
     }
+
 
     //Récurrence
 //    private void enqueueNextExecution(int hour, int minute, int second){

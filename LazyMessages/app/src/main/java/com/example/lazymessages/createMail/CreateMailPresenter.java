@@ -9,6 +9,7 @@ import androidx.work.WorkRequest;
 
 import com.example.lazymessages.DataStore;
 import com.example.lazymessages.MailDao;
+import com.google.gson.Gson;
 
 import java.util.Calendar;
 import java.util.List;
@@ -56,7 +57,7 @@ public class CreateMailPresenter {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    protected void setRecurringAlarm2(Context context, String day, String month, String year, String hour, String minute) {
+    protected void setRecurringAlarm2(Context context, String day, String month, String year, String hour, String minute, MailEntity m) {
         Calendar currentDate = Calendar.getInstance();
         Calendar dueDate = Calendar.getInstance();
 
@@ -71,6 +72,14 @@ public class CreateMailPresenter {
             dueDate.add(Calendar.HOUR_OF_DAY, 24);
         }
         long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
+
+
+//        String mailStringified = new Gson().toJson(m);
+//        DetailMailIntent.putExtra("mail_clicked", mailStringified);
+//        startActivity(DetailMailIntent);
+
+
+
         WorkRequest dailyRemindCollectRequest = new OneTimeWorkRequest.Builder(RemindCollecteWorker.class)
                 .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
                 .build();
