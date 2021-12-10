@@ -84,14 +84,19 @@ public class RemindCollecteWorker extends Worker {
        }
 
        //CA MARCHE PAS : ça affiche pas le destinataire
-       Log.wtf("wtf",m.destinataire);
+
 
        //Renvoi vers l'application Gmail
        Intent i = new Intent(Intent.ACTION_SEND);
        i.setType("message/rfc822");
-       i.putExtra(Intent.EXTRA_EMAIL, m.destinataire);
+//       i.putExtra(Intent.ACTION_VIEW, Uri.parse("mailto:" + m.destinataire));
        i.putExtra(Intent.EXTRA_SUBJECT, m.objet);
+       i.putExtra(Intent.EXTRA_EMAIL, new String[]{m.destinataire});
        i.putExtra(Intent.EXTRA_TEXT, m.contenu);
+       Log.wtf("wtf",m.objet);
+       //Récupère le bon destinataire dans le log mais ne l'affiche pas dans le putExtra :(
+       Log.wtf("wtf",m.destinataire);
+       Log.wtf("wtf",m.contenu);
 
        try {
 //           //INIT DATASTORE
@@ -100,7 +105,7 @@ public class RemindCollecteWorker extends Worker {
 //           MailDao mailDao = db.mailDao();
 //           mailEntityList = mailDao.get;
 
-           PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
+           PendingIntent pendingIntent = PendingIntent.getActivity(context, m.id, i, 0);
            Notification notification = new NotificationCompat.Builder(context, String.valueOf(CHANNEL_ID))
                    .setSmallIcon(R.drawable.logo)
                    .setContentTitle("Un nouveau mail en attente")
