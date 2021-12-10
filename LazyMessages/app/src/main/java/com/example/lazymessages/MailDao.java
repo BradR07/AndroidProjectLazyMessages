@@ -14,15 +14,27 @@ public interface MailDao {
     @Query("SELECT * FROM mailentity")
     List<MailEntity> getAll();
 
+    @Query("SELECT * FROM mailentity WHERE id LIKE :id LIMIT 1")
+    MailEntity getOneById(int id);
+
 //    @Query("SELECT * FROM mail WHERE id IN (:mailIds)")
 //    List<MailEntity> loadAllByIds(int[] mailIds);
 
-//    @Query("SELECT * FROM mail WHERE objet LIKE :objet LIMIT 1")
-//    MailEntity findByObjet(String objet);
+    @Query("SELECT * FROM mailentity WHERE objet LIKE :objet LIMIT 1")
+    MailEntity findByObjet(String objet);
 
     @Insert
-    void insertAll(MailEntity... mail);
+    void insertAll(List<MailEntity> mail);
+
+//    @Query("INSERT INTO mailentity VALUES mail")
+//    insertMail();
 
     @Delete
     void delete(MailEntity mail);
+
+    @Query("DELETE FROM mailentity")
+    void deleteTable() ;
+
+    @Query("DELETE FROM mailentity WHERE id LIKE :id")
+    void deleteById(int id);
 }

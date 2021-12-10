@@ -18,13 +18,19 @@ import androidx.core.app.NotificationManagerCompat;
 //import androidx.work.WorkRequest;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import com.example.lazymessages.DataStore;
+import com.example.lazymessages.MailDao;
 import com.example.lazymessages.R;
+
+import java.util.List;
 //import java.util.Calendar;
 //import java.util.concurrent.TimeUnit;
 
 public class RemindCollecteWorker extends Worker {
     private final Context context;
     private static final int CHANNEL_ID = 1023;
+    private List<MailEntity> mailEntityList ;
 
     public RemindCollecteWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -53,11 +59,17 @@ public class RemindCollecteWorker extends Worker {
        //Renvoi vers l'application Gmail
        Intent i = new Intent(Intent.ACTION_SEND);
        i.setType("message/rfc822");
-       i.putExtra(Intent.EXTRA_EMAIL, "destinataire@abc.fr");
+       i.putExtra(Intent.EXTRA_EMAIL, "destinataire@gmail.com");
        i.putExtra(Intent.EXTRA_SUBJECT, "subject");
        i.putExtra(Intent.EXTRA_TEXT, "nBinding.editTextTextContent.getText().toString()");
 
        try {
+//           //INIT DATASTORE
+//           DataStore db = DataStore.getDatabase(getApplicationContext());
+//           //RECUP TOUTE LA LISTE MAIL
+//           MailDao mailDao = db.mailDao();
+//           mailEntityList = mailDao.get;
+
            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
            Notification notification = new NotificationCompat.Builder(context, String.valueOf(CHANNEL_ID))
                    .setSmallIcon(R.drawable.logo)

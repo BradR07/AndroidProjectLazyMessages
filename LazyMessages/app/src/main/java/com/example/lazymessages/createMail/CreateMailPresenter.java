@@ -1,13 +1,56 @@
 package com.example.lazymessages.createMail;
 
 import android.content.Context;
+import android.os.AsyncTask;
+
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
+
+import com.example.lazymessages.DataStore;
+import com.example.lazymessages.MailDao;
+
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class CreateMailPresenter {
+    private String day;
+    private String month;
+    private String year;
+    private String hour;
+    private String minute;
+    private Context context ;
+    private CreateMailPresenterCallback mCallBack;
+
+
+    public CreateMailPresenter(Context context, CreateMailPresenterCallback callback) {
+        this.mCallBack = callback;
+        this.context = context;
+    }
+
+    public void InsertInDB(MailEntity mailEntity){
+        //RECUPERATION DU MAIL CREE ET INSERTION BDD
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                //INSERT HERE YOUR CODE TO WRITE IN DB
+                DataStore db = DataStore.getDatabase(context);
+                //RECUP TOUTE LA LISTE MAIL
+                MailDao mailDao = db.mailDao();
+                List<MailEntity> mailEntityList = mailDao.getAll();
+                //ADD CURRENT MAIL
+                mailEntityList.add(mailEntity);
+                //DELETE ALL MAIL TABLE
+                db.mailDao().deleteTable();
+                db.mailDao().insertAll(mailEntityList);
+                mCallBack.onMailInserted();
+            }
+        });
+
+    }
 
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -33,4 +76,34 @@ public class CreateMailPresenter {
                 .build();
         WorkManager.getInstance(context).enqueue(dailyRemindCollectRequest);
     }
+
+     public void setDateTime(String day, String month, String year, String hour, String minute){
+        this.day = day;
+        this.month = month;
+        this.year = year;
+        this.hour = hour;
+        this.minute = minute;
+    }
+
+    public String getDay(){
+        return day;
+    }
+
+    public String getMonth(){
+        return month;
+    }
+
+    public String getYear(){
+        return year;
+    }
+
+    public String getHour(){
+        return hour;
+    }
+
+    public String getMinute(){
+        return minute;
+    }
+
 }
+

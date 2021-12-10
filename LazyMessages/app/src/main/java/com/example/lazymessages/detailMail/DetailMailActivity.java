@@ -1,11 +1,17 @@
 package com.example.lazymessages.detailMail;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.lazymessages.DataStore;
+import com.example.lazymessages.MailDao;
+import com.example.lazymessages.Singleton;
+import com.example.lazymessages.createMail.MailEntity;
 import com.example.lazymessages.createMail.Mails;
 import com.example.lazymessages.databinding.DetailMailBinding;
 import com.google.gson.Gson;
@@ -18,6 +24,7 @@ public class DetailMailActivity extends AppCompatActivity {
 
     private DetailMailBinding nBinding;
     private Mails mails;
+    private MailEntity mailEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +40,38 @@ public class DetailMailActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        nBinding.textView2.setText(mails.objet);
-        nBinding.destinataire.setText(mails.destinataire);
-        nBinding.message.setText(mails.contenu);
-        nBinding.date.setText(mails.date);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                //INSERT HERE YOUR CODE TO WRITE IN DB
+                //INIT DATASTORE
+                DataStore db = DataStore.getDatabase(getApplicationContext());
+                //RECUP TOUTE LA LISTE MAIL
+                MailDao mailDao = db.mailDao();
+                //Get le mail selectionné
+
+                Singleton monSingeton = Singleton.getInstanceSingleton();
+
+
+
+                //mailEntity=Singleton.getInstanceSingleton();
+
+
+               mailEntity = mailDao.getOneById(monSingeton.getMonMail().id);
+
+                System.out.println(mailEntity.contenu);
+
+                //System.out.println(mailEntity);
+            }
+        });
+
+        nBinding.textView2.setText(mailEntity.objet);
+        nBinding.destinataire.setText("test");
+        nBinding.message.setText("test");
+        nBinding.date.setText("test");
+        Log.wtf("wtf", String.valueOf(mails));
 
         setContentView(v);
     }

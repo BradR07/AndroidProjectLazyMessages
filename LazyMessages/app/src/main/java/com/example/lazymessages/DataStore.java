@@ -20,18 +20,7 @@ public abstract class DataStore extends RoomDatabase {
 
     public static DataStore INSTANCE ;
 
-    private static  DataStore instance;
-
-    private List<Mails> mailsList = new ArrayList<>();
-
-//    public static DataStore getInstance() {
-//        if (instance == null){
-//            instance = Room.databaseBuilder(Context context);
-//
-//        }
-//        return instance;
-//    }
-//
+    private List<MailEntity> mailsList = new ArrayList<>();
 
     public static DataStore getDatabase(Context context){
         if(INSTANCE == null){
@@ -46,11 +35,11 @@ public abstract class DataStore extends RoomDatabase {
     /**
      * @return liste de mail
      */
-    public List<Mails> getMailsList() {
+    public List<MailEntity> getMailsList() {
         return mailsList;
     }
 
-    public void setMailList(List<Mails> mailsList) {
+    public void setMailList(List<MailEntity> mailsList) {
         this.mailsList = mailsList;
     }
 }

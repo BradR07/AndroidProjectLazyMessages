@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class MailEntity {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int id;
 
     @ColumnInfo(name = "objet")
@@ -20,4 +20,8 @@ public class MailEntity {
 
     @ColumnInfo(name = "date")
     public String date;
+
+    public String toString(){
+        return this.id+this.objet;
+    }
 }

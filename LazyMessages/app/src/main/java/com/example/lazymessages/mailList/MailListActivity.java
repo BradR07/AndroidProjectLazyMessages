@@ -5,15 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import com.example.lazymessages.DataStore;
+import com.example.lazymessages.MailDao;
+import com.example.lazymessages.Singleton;
+import com.example.lazymessages.createMail.MailEntity;
 import com.example.lazymessages.detailMail.DetailMailActivity;
 import com.example.lazymessages.createMail.Mails;
 import com.example.lazymessages.databinding.DetailMailBinding;
 import com.example.lazymessages.databinding.MailListBinding;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activité création de la liste de messages et affichage de la liste
@@ -22,8 +29,9 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
     private MailListBinding nBinding;
     private MailListAdapter mailListAdapter;
     private DetailMailBinding detailMailBinding;
+    private List<MailEntity> mailEntityList;
 
-    ArrayList<Mails> mailList = new ArrayList<>();
+    //ArrayList<MailEntity> mailList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +48,26 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // Configuration de la liste de message
-        //Messages A = new Messages("Bon anniversaire!", "+33620254149", "Je te souhaites un joyeux anniversaire !", "01/12/2021");
-        //Messages B = new Messages("Texte généré", "+33620254151", "Nihil morati post haec militares avidi saepe turbarum adorti sunt Montium primum, qui divertebat in proximo, levi corpore senem atque morbosum, et hirsutis resticulis cruribus eius innexis divaricaturn sine spiramento ullo ad usque praetorium traxere praefecti.", "01/12/2021");
-        //messagelist.add(A);
-        //messagelist.add(B);
-        //messagelist.addAll(DataStore.getInstance().getMessagesList());
-        //messagelist.clear();
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                //INSERT HERE YOUR CODE TO WRITE IN DB
+                //INIT DATASTORE
+                DataStore db = DataStore.getDatabase(getApplicationContext());
+                //RECUP TOUTE LA LISTE MAIL
+                MailDao mailDao = db.mailDao();
+                mailEntityList = mailDao.getAll();
+            }
+        });
+
+
+        //GIVE TO ADAPTER
 
         nBinding.rvSms.setLayoutManager(new LinearLayoutManager(this , RecyclerView.VERTICAL,false));
         nBinding.rvSms.setAdapter(mailListAdapter);
-        //messageListAdapter.FillArray(messagelist);
+
         setContentView(v);
     }
 
@@ -58,8 +75,7 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
     protected void onResume() {
         super.onResume();
         //messagelist.clear();
-        //mailList.addAll(DataStore.getInstance().getMailsList());
-        mailListAdapter.FillArray(mailList);
+        this.mailListAdapter.FillArray(mailEntityList);
     }
 
     /**
@@ -67,13 +83,31 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
      * @param m un mail
      */
     @Override
-    public void onMailClick(Mails m) {
+    public void onMailClick(MailEntity m) {
         Intent DetailMailIntent = new Intent(MailListActivity.this, DetailMailActivity.class);
         DetailMailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         String mailStringified = new Gson().toJson(m);
         DetailMailIntent.putExtra("mail_clicked", mailStringified);
         startActivity(DetailMailIntent);
         //Toast.makeText(this, "my message : " + m , Toast.LENGTH_LONG).show();
+        int monId= m.id;
+
+        Singleton.getInstanceSingleton(m);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                //INSERT HERE YOUR CODE TO WRITE IN DB
+                //INIT DATASTORE
+                DataStore db = DataStore.getDatabase(getApplicationContext());
+                //RECUP TOUTE LA LISTE MAIL
+                MailDao mailDao = db.mailDao();
+                //Delete le mail selectionné
+                Singleton.getInstanceSingleton(mailDao.getOneById(m.id));
+            }
+        });
+
     }
 
     /**
@@ -81,11 +115,28 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
      * @param m un mail
      */
     @Override
-    public void deleteMailClicked(Mails m) {
+    public void deleteMailClicked(MailEntity m) {
         Toast.makeText(this, "Mail supprimé : " + m.objet, Toast.LENGTH_LONG).show();
-        mailList.remove(m);
-        mailListAdapter.FillArray(mailList);
-        //L'enlever du DataStore
-        //DataStore.getInstance().getMailsList().remove(m);
+        mailEntityList.remove(m);
+        mailListAdapter.FillArray(mailEntityList);
+
+        //Suppr de la BDD
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                //INSERT HERE YOUR CODE TO WRITE IN DB
+                //INIT DATASTORE
+                DataStore db = DataStore.getDatabase(getApplicationContext());
+                //RECUP TOUTE LA LISTE MAIL
+                MailDao mailDao = db.mailDao();
+                //Delete le mail selectionné
+                mailDao.deleteById(m.id);
+            }
+        });
+
     }
+
+
 }

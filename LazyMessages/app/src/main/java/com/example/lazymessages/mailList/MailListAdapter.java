@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.lazymessages.createMail.MailEntity;
 import com.example.lazymessages.createMail.Mails;
 import com.example.lazymessages.databinding.ItemMailListBinding;
 import java.util.ArrayList;
@@ -15,13 +17,13 @@ import java.util.List;
  * RecyclerView de la liste de message
  */
 public class MailListAdapter extends RecyclerView.Adapter {
-    List<Mails> mailList = new ArrayList<>() ;
+    List<MailEntity> mailList = new ArrayList<>() ;
     private final OnMailClickListener mCallBack ;
 
     /**
      * @param mailList liste de message
      */
-    public void FillArray(List<Mails> mailList){
+    public void FillArray(List<MailEntity> mailList){
         this.mailList.clear();
         this.mailList.addAll(mailList);
         notifyDataSetChanged();
@@ -56,7 +58,7 @@ public class MailListAdapter extends RecyclerView.Adapter {
             this.binding = binding;
         }
 
-        public void bindTo(Mails mails){
+        public void bindTo(MailEntity mails){
             binding.tvItemMessageList.setText(mails.objet.toString());
             binding.destinataire.setText(mails.destinataire.toString());
             binding.detail.setOnClickListener(new View.OnClickListener() {

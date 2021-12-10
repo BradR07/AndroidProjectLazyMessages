@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,9 +19,9 @@ import java.util.List;
 /**
  * Activité de création et envoi de mail
  */
-public class CreateMailActivity extends AppCompatActivity implements OnReturnDateInformation {
+public class CreateMailActivity extends AppCompatActivity implements OnReturnDateInformation, CreateMailPresenterCallback {
     private CreateMailBinding nBinding;
-    private final CreateMailPresenter createMailPresenter = new CreateMailPresenter();
+    private CreateMailPresenter createMailPresenter;
     private final MailEntity mail = new MailEntity();
 
     /**
@@ -29,10 +30,20 @@ public class CreateMailActivity extends AppCompatActivity implements OnReturnDat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createMailPresenter = new CreateMailPresenter(this, this);
         nBinding = CreateMailBinding.inflate(getLayoutInflater());
         View v = nBinding.getRoot();
         Context context = getApplicationContext();
 
+        initView();
+
+
+
+        setContentView(v);
+    }
+
+    private void initView(){
+        //CONFIG VIEW
         // Configuration de la ToolBar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Créer un nouveau mail");
@@ -57,6 +68,7 @@ public class CreateMailActivity extends AppCompatActivity implements OnReturnDat
          * onClick sur le bouton 'créer' du layout create_mail, création du mail puis renvoi sur la vue MessageList
          * @param v une View
          */
+
         nBinding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,58 +77,60 @@ public class CreateMailActivity extends AppCompatActivity implements OnReturnDat
                     CharSequence text = "Email invalide";
                     int duration = Toast.LENGTH_SHORT;
 
-                    Toast toast = Toast.makeText(context, text, duration);
+                    Toast toast = Toast.makeText(getApplicationContext(), text, duration);
                     toast.show();
                 }else{
-
-//////////////////////////////
                     //Création du mail
+
                     mail.objet = nBinding.editTextTextObject.getText().toString();
                     mail.destinataire = nBinding.editTextMail.getText().toString();
                     mail.contenu = nBinding.editTextTextContent.getText().toString();
 
-                    DataStore db = DataStore.getDatabase(getApplicationContext());
-                    db.mailDao().insertAll((MailEntity) db.getMailsList());
-
-                    MailDao mailDao = db.mailDao();
-                    List<MailEntity> mailEntityList = mailDao.getAll();
-                    mailEntityList.add(mail);
-
-                    Log.wtf("w", (Throwable) mailEntityList);
-                    //Mails m = new Mails(nBinding.editTextTextObject.getText().toString(), nBinding.editTextMail.getText().toString(), nBinding.editTextTextContent.getText().toString(), nBinding.editTextDate.getText().toString());
-                    //MailEntity mailEntity= new MailEntity();
-                    //mailEntity.objet = nBinding.editTextTextObject.getText().toString();
-                    //DataStore.getInstance().getMailsList().add(m);
-//////////////////////////////
-
-                    //Message de confirmation programmation du mail
-                    CharSequence text = "Nouveau mail programmé !";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-
-                    //Renvoi a la liste des mails
-                    Intent MailListAfterCreationIntent = new Intent(CreateMailActivity.this, MailListActivity.class);
-                    MailListAfterCreationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(MailListAfterCreationIntent);
+                    createMailPresenter.InsertInDB(mail);
                 }
             }
         });
-        setContentView(v);
+
     }
+
+
 
     @Override
     public void onDateChosen(String day, String month, String year, String hour, String minute) {
         Context context = getApplicationContext();
 
         nBinding.editTextDate.setText(day+ "/" +month+ "/" +year+ " " +hour+ ":" +minute);
-        createMailPresenter.setRecurringAlarm2(this, day, month, year, hour, minute);
+        createMailPresenter.setDateTime(day, month, year, hour, minute);
         mail.date = nBinding.editTextDate.getText().toString();
 
-        //Message de confirmation lorsque la nofication est créée
-        CharSequence text = "Notification programmée!";
+//        //Message de confirmation lorsque la nofication est créée
+//        CharSequence text = "Notification programmée!";
+//        int duration = Toast.LENGTH_SHORT;
+//        Toast toast = Toast.makeText(context, text, duration);
+//        toast.show();
+    }
+
+    @Override
+    public void onMailInserted() {
+
+        //Donner le DateTime a la notif
+        createMailPresenter.setRecurringAlarm2(this, createMailPresenter.getDay(), createMailPresenter.getMonth(), createMailPresenter.getYear(), createMailPresenter.getHour(), createMailPresenter.getMinute());
+
+        //Message de confirmation programmation du mail
+        CharSequence text = "Nouveau mail programmé !";
         int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                toast.show();
+            }
+        });
+        //Renvoi a la liste des mails
+        Intent MailListAfterCreationIntent = new Intent(CreateMailActivity.this, MailListActivity.class);
+        MailListAfterCreationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(MailListAfterCreationIntent);
     }
 }
+
+
