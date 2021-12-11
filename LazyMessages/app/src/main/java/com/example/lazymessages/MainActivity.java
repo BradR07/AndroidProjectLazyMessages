@@ -1,20 +1,17 @@
 package com.example.lazymessages;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import com.example.lazymessages.createMail.CreateMailActivity;
 import com.example.lazymessages.databinding.ActivityMainBinding;
 import com.example.lazymessages.mailList.MailListActivity;
 
 /**
- * Activité principale acceuil
+ * Activité principale 'Accueil'
  */
 public class MainActivity extends AppCompatActivity {
-
     private ActivityMainBinding nBinding;
 
     @Override
@@ -49,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(MailListIntent);
             }
         });
-
         setContentView(v);
         getSupportActionBar().hide();
     }

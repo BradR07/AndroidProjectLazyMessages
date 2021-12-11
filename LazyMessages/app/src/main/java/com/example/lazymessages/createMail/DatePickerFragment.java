@@ -13,10 +13,7 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
 
-public class DatePickerFragment extends DialogFragment
-        implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener {
-
-    private OnDatePickListener mListener;
+public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener {
     private Context context ;
     private TimePickerDialog TP;
     private String mDay = "";
@@ -35,7 +32,6 @@ public class DatePickerFragment extends DialogFragment
     public DatePickerFragment(OnReturnDateInformation mCallback) {
         this.mCallback = mCallback;
     }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -45,13 +41,12 @@ public class DatePickerFragment extends DialogFragment
         int day = c.get(Calendar.DAY_OF_MONTH);
         int hour = c.get(Calendar.HOUR);
         int min = c.get(Calendar.MINUTE);
-        // Create a new instance of DatePickerDialog and return it
+        // Créer une nouvelle instance de DatePickerDialog et l'a renvoi
         DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);
         TimePickerDialog.OnTimeSetListener onTimeSetListener;
         TP = new TimePickerDialog(this.context, this ,hour , min, true);
         return dialog;
     }
-
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

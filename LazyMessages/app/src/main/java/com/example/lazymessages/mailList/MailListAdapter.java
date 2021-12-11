@@ -3,12 +3,9 @@ package com.example.lazymessages.mailList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.lazymessages.createMail.MailEntity;
-import com.example.lazymessages.createMail.Mails;
 import com.example.lazymessages.databinding.ItemMailListBinding;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +47,7 @@ public class MailListAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return mailList.size();
     }
+
     public class MessageListViewHolder extends RecyclerView.ViewHolder {
         private final ItemMailListBinding binding ;
 
@@ -59,8 +57,9 @@ public class MailListAdapter extends RecyclerView.Adapter {
         }
 
         public void bindTo(MailEntity mails){
-            binding.tvItemMessageList.setText(mails.objet);
-            binding.destinataire.setText(mails.destinataire);
+            binding.tvItemMessageList.setText("Objet: "+mails.objet);
+            binding.destinataire.setText("Destinataire: "+mails.destinataire);
+            binding.date.setText("Programmé pour le: "+mails.date);
             binding.detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

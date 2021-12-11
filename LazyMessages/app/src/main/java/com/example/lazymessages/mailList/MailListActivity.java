@@ -9,29 +9,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
 import com.example.lazymessages.DataStore;
 import com.example.lazymessages.MailDao;
-import com.example.lazymessages.Singleton;
 import com.example.lazymessages.createMail.MailEntity;
 import com.example.lazymessages.detailMail.DetailMailActivity;
-import com.example.lazymessages.createMail.Mails;
 import com.example.lazymessages.databinding.DetailMailBinding;
 import com.example.lazymessages.databinding.MailListBinding;
 import com.google.gson.Gson;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Activité création de la liste de messages et affichage de la liste
+ * Activité création de la liste de mail et affichage cette liste
  */
 public class MailListActivity extends AppCompatActivity implements OnMailClickListener {
     private MailListBinding nBinding;
     private MailListAdapter mailListAdapter;
     private DetailMailBinding detailMailBinding;
     private List<MailEntity> mailEntityList;
-
-    //ArrayList<MailEntity> mailList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,35 +42,27 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
-                //INSERT HERE YOUR CODE TO WRITE IN DB
-                //INIT DATASTORE
+                //Initialisation du 'DataStore'
                 DataStore db = DataStore.getDatabase(getApplicationContext());
-                //RECUP TOUTE LA LISTE MAIL
+                //Récupère tout la liste 'MAIL'
                 MailDao mailDao = db.mailDao();
                 mailEntityList = mailDao.getAll();
             }
         });
-
-
-        //GIVE TO ADAPTER
-
+        //Donne à l'adapter le contexte du mail
         nBinding.rvSms.setLayoutManager(new LinearLayoutManager(this , RecyclerView.VERTICAL,false));
         nBinding.rvSms.setAdapter(mailListAdapter);
-
         setContentView(v);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //messagelist.clear();
         DataStore db = DataStore.getDatabase(getApplicationContext());
-        //RECUP TOUTE LA LISTE MAIL
+        //Récupère tout la liste 'MAIL'
         MailDao mailDao = db.mailDao();
         mailEntityList = mailDao.getAll();
         this.mailListAdapter.FillArray(mailEntityList);
@@ -93,25 +79,16 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
         String mailStringified = new Gson().toJson(m);
         DetailMailIntent.putExtra("mail_clicked", mailStringified);
         startActivity(DetailMailIntent);
-        //Toast.makeText(this, "my message : " + m , Toast.LENGTH_LONG).show();
-
-
-        //Singleton.getInstanceSingleton(m);
 
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
-                //INSERT HERE YOUR CODE TO WRITE IN DB
-                //INIT DATASTORE
+                //Initialisation du 'DataStore'
                 DataStore db = DataStore.getDatabase(getApplicationContext());
-                //RECUP TOUTE LA LISTE MAIL
+                //Récupère tout la liste 'MAIL'
                 MailDao mailDao = db.mailDao();
-                //Delete le mail selectionné
-                //Singleton.getInstanceSingleton(mailDao.getOneById(m.id));
             }
         });
-
     }
 
     /**
@@ -121,40 +98,27 @@ public class MailListActivity extends AppCompatActivity implements OnMailClickLi
     @Override
     public void deleteMailClicked(MailEntity m) {
         Toast.makeText(this, "Mail supprimé : " + m.objet, Toast.LENGTH_LONG).show();
-        //Creer nouvelle liste
-
-        //mettre liste courrante dans la nouvelle
+        //Met la liste courante dans la nouvelle
         DataStore db = DataStore.getDatabase(getApplicationContext());
-        //RECUP TOUTE LA LISTE MAIL
+        //Récupère tout la liste 'MAIL'
         MailDao mailDao = db.mailDao();
         List<MailEntity> mailEntityList = mailDao.getAll();
-
         List<MailEntity> newMailEntityList = mailEntityList;
-
-        //Remove de la nouvelle liste
-        //ajouter la nouvelle liste
+        //Supprime de la nouvelle liste
         newMailEntityList.remove(m);
+        //Ajoute à la nouvelle liste
         mailListAdapter.FillArray(newMailEntityList);
-
-        //CA RAFRAICHIS PAS -> ESSAYER DE RAFRAICHIR APRES LA SUPPR
-
-        //Suppr de la BDD
 
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
-                //INSERT HERE YOUR CODE TO WRITE IN DB
-                //INIT DATASTORE
+                //Initialisation du 'DataStore'
                 DataStore db = DataStore.getDatabase(getApplicationContext());
-                //RECUP TOUTE LA LISTE MAIL
+                //Récupère tout la liste 'MAIL'
                 MailDao mailDao = db.mailDao();
-                //Delete le mail selectionné
+                //Efface le mail selectionné
                 mailDao.deleteById(m.id);
             }
         });
-
     }
-
-
 }

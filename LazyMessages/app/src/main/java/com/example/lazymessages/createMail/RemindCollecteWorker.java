@@ -9,26 +9,21 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-//import androidx.work.OneTimeWorkRequest;
-//import androidx.work.WorkManager;
-//import androidx.work.WorkRequest;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-
 import com.example.lazymessages.DataStore;
 import com.example.lazymessages.MailDao;
 import com.example.lazymessages.R;
-import com.google.gson.Gson;
-
 import java.util.Calendar;
 import java.util.List;
-//import java.util.Calendar;
-//import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeUnit;
 
 public class RemindCollecteWorker extends Worker {
     private final Context context;
@@ -38,26 +33,22 @@ public class RemindCollecteWorker extends Worker {
 
     public RemindCollecteWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        //mailEntity = new Gson().fromJson(getIntent().getStringExtra("mail_clicked"), MailEntity.class);
         this.context = context;
     }
 
     @NonNull
     @Override
     public Result doWork() {
-
         getMailList();
         return Result.success();
     }
 
     private void getMailList(){
         DataStore db = DataStore.getDatabase(context);
-        //RECUP TOUTE LA LISTE MAIL
+        //Récupère toute la liste MAIL
         MailDao mailDao = db.mailDao();
         List<MailEntity> mailEntityList = mailDao.getAll();
         String currentDate = Calendar.getInstance().toString();
-
-
 
         for (MailEntity i: mailEntityList) {
             if (currentDate.equals(i.date)) {
@@ -66,14 +57,11 @@ public class RemindCollecteWorker extends Worker {
             }
             createNotification(i);
         }
-
     }
 
-
    private void createNotification(MailEntity m){
-
-       CharSequence name = "Un nouveau mail en attente";
-       String description = "Cliquez pour envoyer votre mail";
+       CharSequence name = "Le mail '"+m.objet+"' est en attente d'envoi";
+       String description = "Cliquez ici pour l'envoyer";
        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -82,34 +70,19 @@ public class RemindCollecteWorker extends Worker {
            channel.setDescription(description);
            notificationManager.createNotificationChannel(channel);
        }
-
-       //CA MARCHE PAS : ça affiche pas le destinataire
-
-
-       //Renvoi vers l'application Gmail
+       //Renvoi vers l'application Gmail avec les données du mail pré-remplies
        Intent i = new Intent(Intent.ACTION_SEND);
        i.setType("message/rfc822");
-//       i.putExtra(Intent.ACTION_VIEW, Uri.parse("mailto:" + m.destinataire));
        i.putExtra(Intent.EXTRA_SUBJECT, m.objet);
        i.putExtra(Intent.EXTRA_EMAIL, new String[]{m.destinataire});
        i.putExtra(Intent.EXTRA_TEXT, m.contenu);
-       Log.wtf("wtf",m.objet);
-       //Récupère le bon destinataire dans le log mais ne l'affiche pas dans le putExtra :(
-       Log.wtf("wtf",m.destinataire);
-       Log.wtf("wtf",m.contenu);
 
        try {
-//           //INIT DATASTORE
-//           DataStore db = DataStore.getDatabase(getApplicationContext());
-//           //RECUP TOUTE LA LISTE MAIL
-//           MailDao mailDao = db.mailDao();
-//           mailEntityList = mailDao.get;
-
            PendingIntent pendingIntent = PendingIntent.getActivity(context, m.id, i, 0);
            Notification notification = new NotificationCompat.Builder(context, String.valueOf(CHANNEL_ID))
                    .setSmallIcon(R.drawable.logo)
-                   .setContentTitle("Un nouveau mail en attente")
-                   .setContentText("Cliquez pour envoyer votre mail")
+                   .setContentTitle("Le mail '"+m.objet+"' est en attente d'envoi")
+                   .setContentText("Cliquez ici pour l'envoyer")
                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                    // Set the intent that will fire when the user taps the notification
                    .setContentIntent(pendingIntent)
@@ -119,36 +92,30 @@ public class RemindCollecteWorker extends Worker {
            notificationManager.notify(CHANNEL_ID , notification);
        } catch (android.content.ActivityNotFoundException ex) {
            Context context = getApplicationContext();
-           Toast.makeText(context, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+           Toast.makeText(context, "Aucun client de messagerie n'est installé.", Toast.LENGTH_SHORT).show();
        }
-
        //create a vibration
-       //try {
-           Uri som = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-           Ringtone toque = RingtoneManager.getRingtone(context, som);
-           toque.play();
-       //} catch (Exception e) {
-
-       //}
+       Uri som = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+       Ringtone toque = RingtoneManager.getRingtone(context, som);
+       toque.play();
     }
 
+    //Récurrence (Elle n'est actuellement pas implementée par manque de temps)
+    private void enqueueNextExecution(int hour, int minute, int second){
+        Calendar currentDate = Calendar.getInstance();
+        Calendar dueDate = Calendar.getInstance();
 
-    //Récurrence
-//    private void enqueueNextExecution(int hour, int minute, int second){
-//        Calendar currentDate = Calendar.getInstance();
-//        Calendar dueDate = Calendar.getInstance();
-//
-//        dueDate.set(Calendar.HOUR_OF_DAY , hour );
-//        dueDate.set(Calendar.MINUTE , minute);
-//        dueDate.set(Calendar.SECOND , second);
-//
-//        if (dueDate.before(currentDate)){
-//            dueDate.add(Calendar.HOUR_OF_DAY , 24);
-//        }
-//        long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
-//        WorkRequest dailyRemindCollectRequest = new OneTimeWorkRequest.Builder(RemindCollecteWorker.class)
-//                .setInitialDelay(timeDiff , TimeUnit.MILLISECONDS)
-//                .build();
-//        WorkManager.getInstance(context).enqueue(dailyRemindCollectRequest);
-//    }
+        dueDate.set(Calendar.HOUR_OF_DAY , hour );
+        dueDate.set(Calendar.MINUTE , minute);
+        dueDate.set(Calendar.SECOND , second);
+
+        if (dueDate.before(currentDate)){
+            dueDate.add(Calendar.HOUR_OF_DAY , 24);
+        }
+        long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
+        WorkRequest dailyRemindCollectRequest = new OneTimeWorkRequest.Builder(RemindCollecteWorker.class)
+                .setInitialDelay(timeDiff , TimeUnit.MILLISECONDS)
+                .build();
+        WorkManager.getInstance(context).enqueue(dailyRemindCollectRequest);
+    }
 }

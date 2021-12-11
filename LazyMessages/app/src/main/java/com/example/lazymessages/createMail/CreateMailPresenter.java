@@ -2,15 +2,11 @@ package com.example.lazymessages.createMail;
 
 import android.content.Context;
 import android.os.AsyncTask;
-
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-
 import com.example.lazymessages.DataStore;
 import com.example.lazymessages.MailDao;
-import com.google.gson.Gson;
-
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,33 +20,28 @@ public class CreateMailPresenter {
     private Context context ;
     private CreateMailPresenterCallback mCallBack;
 
-
     public CreateMailPresenter(Context context, CreateMailPresenterCallback callback) {
         this.mCallBack = callback;
         this.context = context;
     }
 
     public void InsertInDB(MailEntity mailEntity){
-        //RECUPERATION DU MAIL CREE ET INSERTION BDD
-
+        //Récupèration du mail créé, puis l'insère dans la Base de données
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-
-                //INSERT HERE YOUR CODE TO WRITE IN DB
                 DataStore db = DataStore.getDatabase(context);
-                //RECUP TOUTE LA LISTE MAIL
+                //Récupère toute la liste 'MAIL'
                 MailDao mailDao = db.mailDao();
                 List<MailEntity> mailEntityList = mailDao.getAll();
-                //ADD CURRENT MAIL
+                //Ajoute le mail courant
                 mailEntityList.add(mailEntity);
-                //DELETE ALL MAIL TABLE
+                //Supprime tous les mails de la table
                 db.mailDao().deleteTable();
                 db.mailDao().insertAll(mailEntityList);
                 mCallBack.onMailInserted();
             }
         });
-
     }
 
     boolean isEmailValid(CharSequence email) {
@@ -72,14 +63,6 @@ public class CreateMailPresenter {
             dueDate.add(Calendar.HOUR_OF_DAY, 24);
         }
         long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
-
-
-//        String mailStringified = new Gson().toJson(m);
-//        DetailMailIntent.putExtra("mail_clicked", mailStringified);
-//        startActivity(DetailMailIntent);
-
-
-
         WorkRequest dailyRemindCollectRequest = new OneTimeWorkRequest.Builder(RemindCollecteWorker.class)
                 .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
                 .build();
@@ -115,4 +98,3 @@ public class CreateMailPresenter {
     }
 
 }
-
