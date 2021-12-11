@@ -41,7 +41,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         int day = c.get(Calendar.DAY_OF_MONTH);
         int hour = c.get(Calendar.HOUR);
         int min = c.get(Calendar.MINUTE);
-        // Créer une nouvelle instance de DatePickerDialog et l'a renvoi
+        // Créer une nouvelle instance de DatePickerDialog et l'a renvoie
         DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);
         TimePickerDialog.OnTimeSetListener onTimeSetListener;
         TP = new TimePickerDialog(this.context, this ,hour , min, true);
